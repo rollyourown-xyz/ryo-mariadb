@@ -1,5 +1,5 @@
-# The terraform lxd and consul providers are required to deploy this module
-###########################################################################
+# The terraform lxd provider is required to deploy this module
+##############################################################
 
 terraform {
   required_version = ">= 0.14"
@@ -8,10 +8,6 @@ terraform {
       source  = "terraform-lxd/lxd"
       version = "~> 1.5.0"
     }
-    # consul = {
-    #   source = "hashicorp/consul"
-    #   version = "~> 2.12.0"
-    # }
   }
 }
 
@@ -26,9 +22,3 @@ provider "lxd" {
     default  = true
   }
 }
-
-# provider "consul" {
-#   address    = join("", [ local.consul_ip_address, ":8500" ])
-#   scheme     = "http"
-#   datacenter = var.host_id
-# }
