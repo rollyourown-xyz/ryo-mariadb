@@ -3,15 +3,8 @@
 #
 - name: Add MariaDB signing key
   apt_key:
-    keyserver: 'keyserver.ubuntu.com'
-    id: '0xF1656F24C74CD1D8'
+    url: https://mariadb.org/mariadb_release_signing_key.asc
     state: present
-
-# OLD VERSION - REMOVE AFTER TESTING WITH THE ABOVE
-# - name: Add MariaDB signing key
-#   apt_key:
-#     url: https://mariadb.org/mariadb_release_signing_key.asc
-#     state: present
 
 # Add repository
 #
@@ -20,6 +13,7 @@
     repo: 'deb [arch=amd64,arm64,ppc64el] http://archive.mariadb.org/mariadb-{{ mariadb_version }}/repo/ubuntu/ focal main'
     state: present
     update_cache: yes
+
 
 # Install packages
 - name: Install MariaDB packages
