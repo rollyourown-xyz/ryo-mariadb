@@ -1,5 +1,3 @@
-### TO CHECK: Do we need consul-template?
-
 #------------------------------------------------------------------
 # Packer template for building LXD container image for mariadb
 # Ubuntu minimal images are used as base images
@@ -26,12 +24,6 @@ variable "mariadb_version" {
   type        = string
 }
 
-# Specify the consul-template version to use in the image build
-# variable "consul_template_version" {
-#   description = "Mandatory: The consul-template version to use in the image build."
-#   type        = string
-# }
-
 ## Local configuration variables
 ##
 
@@ -57,7 +49,6 @@ locals {
 
   build_inventory_file = "${abspath(path.root)}/playbooks/inventory.yml"
   build_playbook_file  = "${abspath(path.root)}/playbooks/provision-mariadb.yml"
-  #build_extra_vars     = "host_id=${var.host_id} module_id=${local.module_id} mariadb_version=${var.mariadb_version} consul_template_version=${var.consul_template_version}"
   build_extra_vars     = "host_id=${var.host_id} module_id=${local.module_id} mariadb_version=${var.mariadb_version}"
 }
 

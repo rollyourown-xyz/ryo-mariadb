@@ -1,6 +1,3 @@
-### TO CHECK: Do we need consul-template?
-
-
 #!/bin/bash
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -15,7 +12,6 @@ helpMessage()
    echo -e "-n hostname \t\t\t(Mandatory) Name of the host for which to build images"
    echo -e "-v version \t\t\t(Mandatory) Version stamp to apply to images, e.g. 20210101-1"
    echo -e "-m mariadb_version \t(Optional) Override default mariadb version to use for the mariadb image, e.g. 10.6.4 (default)"
-   #echo -e "-c consul_template_version \t(Optional) Override default consul-template version to use for the mariadb image, e.g. 0.26.0 (default)"
    echo -e "-h \t\t\t\tPrint this help message"
    echo ""
    exit 1
@@ -30,7 +26,6 @@ errorMessage()
 
 # Default software versions
 mariadb_version='10.6.4'
-#consul_template_version='0.26.0'
 
 while getopts n:c:v:h flag
 do
@@ -38,7 +33,6 @@ do
         n) hostname=${OPTARG};;
         v) version=${OPTARG};;
         m) mariadb_version=${OPTARG};;
-        #c) consul_template_version=${OPTARG};;
         h) helpMessage ;;
         ?) errorMessage ;;
     esac
@@ -54,9 +48,7 @@ echo "Building images for ryo-coturn module on "$hostname""
 echo ""
 echo "Building Coturn image"
 echo ""
-#echo "Executing command: packer build -var \"host_id="$hostname"\" -var \"version="$version"\" -var \"mariadb_version="$mariadb_version"\" -var \"consul_template_version="$consul_template_version"\" "$SCRIPT_DIR"/image-build/mariadb.pkr.hcl"
 echo "Executing command: packer build -var \"host_id="$hostname"\" -var \"version="$version"\" -var \"mariadb_version="$mariadb_version"\" "$SCRIPT_DIR"/image-build/mariadb.pkr.hcl"
 echo ""
-#packer build -var "host_id="$hostname"" -var "version="$version"" -var "mariadb_version="$mariadb_version"" -var "consul_template_version="$consul_template_version"" "$SCRIPT_DIR"/image-build/mariadb.pkr.hcl
 packer build -var "host_id="$hostname"" -var "version="$version"" -var \"mariadb_version="$mariadb_version"\" "$SCRIPT_DIR"/image-build/mariadb.pkr.hcl
 echo ""
