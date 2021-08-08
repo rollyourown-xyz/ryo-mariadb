@@ -44,11 +44,11 @@ then
 fi
 
 
-echo "Building images for ryo-coturn module on "$hostname""
+echo "Building images for ryo-mariadb module on "$hostname""
 echo ""
-echo "Building Coturn image"
+echo "Building MariaDB image"
 echo ""
 echo "Executing command: packer build -var \"host_id="$hostname"\" -var \"version="$version"\" -var \"mariadb_version="$mariadb_version"\" "$SCRIPT_DIR"/image-build/mariadb.pkr.hcl"
 echo ""
-packer build -var "host_id="$hostname"" -var "version="$version"" -var \"mariadb_version="$mariadb_version"\" "$SCRIPT_DIR"/image-build/mariadb.pkr.hcl
+packer build -var "host_id="$hostname"" -var "version="$version"" -var "mariadb_version="$mariadb_version"" "$SCRIPT_DIR"/image-build/mariadb.pkr.hcl
 echo ""
