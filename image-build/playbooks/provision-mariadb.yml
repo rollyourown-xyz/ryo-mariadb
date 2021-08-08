@@ -1,6 +1,4 @@
 ---
-### TO CHECK: Do we need consul-template?
-
 - name: Provision MariaDB container image
   hosts: packer
 
@@ -16,20 +14,8 @@
     - role: upgrade-container
     - role: install-iptables
     - role: install-cron
-    - role: install-mariadb
     - role: install-consul
-
-#    - role: install-unzip
-#    - role: install-consul-template
-
+    - role: install-mariadb
     - role: set-up-firewall
-    - role: set-up-mariadb
-
-    # - role: set-up-mariadb-common
-    # - role: set-up-mariadb-bootstrap
-    # - role: set-up-mariadb-node
-
-
     - role: set-up-consul
-
-#    - role: set-up-consul-template
+    - role: set-up-mariadb
