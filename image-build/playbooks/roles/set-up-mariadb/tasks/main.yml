@@ -176,8 +176,9 @@
 #
 - name: Copy MariaDB data directory to bootstrap directory
   copy:
-    owner: root
-    group: root
+    owner: mysql
+    group: mysql
+    mode: preserve
     dest: /usr/local/bootstrap/datadir
     src: /var/lib/mysql
     remote_src: yes
@@ -234,8 +235,8 @@
     mode: 0770
     owner: root
     group: root
-    dest: /usr/local/bin/mariadb-bootstap.sh
-    src: mariadb-bootstap.sh
+    dest: /usr/local/bin/mariadb-bootstrap.sh
+    src: mariadb-bootstrap.sh
     force: yes
 
 
