@@ -1,0 +1,251 @@
+---
+
+# Install python3-pymysql to run mysql_user tasks
+#
+- name: Install python3-pymysql
+  apt:
+    name: python3-pymysql
+    update_cache: yes
+    state: present
+
+
+# Note: the following is not needed in MariaDB >= 10.4 as the root account is configured with 
+# no remote login / password access by default. A root password should **not** be set, as otherwise 
+# local processes expecting no password unix socket root access will fail
+# See https://mariadb.com/kb/en/authentication-from-mariadb-104/
+#
+# Perform mysql_secure_installation step: Set new root password, disable remote root login except from wireguard network
+#
+# - name: Set new mariadb root password and disallow remote login except from wireguard network
+#   mysql_user:
+#     login_user: root
+#     login_unix_socket: /var/run/mysqld/mysqld.sock
+#     login_password: ""
+#     name: root
+#     password: "{{ mariadb_root_password }}"
+#     priv: "*.*:ALL,GRANT"
+#     host: "{{ item }}"
+#     state: present
+#   loop:
+#     - {{ wireguard_address_network_part }}.%
+#     - 127.0.0.1
+#     - ::1
+#     - localhost
+
+
+# Perform mysql_secure_installation step: Remove anonymous users
+#
+- name: Remove anonymous users
+  mysql_user:
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_password: ""
+    name: ""
+    host: localhost
+    state: absent
+
+
+# Perform mysql_secure_installation step: Remove test database
+#
+- name: Remove test database
+  mysql_db:
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_password: ""
+    name: test
+    state: absent
+
+
+# For terraform management of databases and users, an additional user `terraform` is created with remote access
+# only from the wireguard network
+#
+
+# Check existence of a previously generated terraform user password for the host
+#
+- name: Check existence of a previously generated terraform user password for the host
+  delegate_to: localhost
+  stat:
+    path: "{{ playbook_dir }}/../../configuration/mariadb_terraform_user_password_{{ host_id }}.yml"
+  register: mariadb_terraform_user_password_file
+
+
+# Load the terraform user password from previously created file (if previously generated)
+#
+- name: Load the terraform user password from previously created file
+  include_vars:
+    file: "{{ playbook_dir }}/../../configuration/mariadb_terraform_user_password_{{ host_id }}.yml"
+  when: mariadb_terraform_user_password_file.stat.exists
+
+
+# Generate a random string as terraform user password (if not previously generated)
+#
+- name: Generate a random string as terraform user password
+  shell: "tr -dc A-Za-z0-9 </dev/urandom | head -c 12"
+  register: mariadb_terraform_user_password_stdout
+  when: not mariadb_terraform_user_password_file.stat.exists
+
+
+# Assign the terraform user password to the variable mariadb_terraform_user_password (if not previously generated)
+#
+- name: Assign the terraform user password to the variable mariadb_terraform_user_password
+  set_fact:
+    mariadb_terraform_user_password: "{{ mariadb_terraform_user_password_stdout.stdout }}"
+  when: not mariadb_terraform_user_password_file.stat.exists
+
+
+# Write the terraform user password to a file in the module configuration directory on the local machine (if not previously generated)
+#
+- name: Write the terraform user password to a file in the module configuration directory
+  delegate_to: localhost
+  template:
+    mode: 0640
+    owner: "{{ local_non_root_user }}"
+    group: "{{ local_non_root_user }}"
+    dest: "{{ playbook_dir }}/../../configuration/mariadb_terraform_user_password_{{ host_id }}.yml"
+    src: mariadb_terraform_user_password.yml.j2
+    force: yes
+    backup: yes
+  when: not mariadb_terraform_user_password_file.stat.exists
+
+
+# Add user `terraform` with remote login only from wireguard network and with admin privileges
+#
+- name: Set new terraform user with admin privileges and remote login from wireguard network
+  mysql_user:
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_password: ""
+    name: terraform
+    password: "{{ mariadb_terraform_user_password }}"
+    priv: "*.*:ALL,GRANT"
+    host: "{{ wireguard_address_network_part }}.%"
+    state: present
+
+
+# Uninstall python3-pymysql after running mysql_user tasks
+#
+- name: Uninstall python3-pymysql
+  apt:
+    name: python3-pymysql
+    update_cache: yes
+    purge: yes
+    state: absent
+
+
+# Stop and disable MariaDB service
+#
+- name: Stop and disable MariaDB service
+  service:
+    name: mariadb
+    enabled: no
+    state: stopped
+
+
+# Copy MariaDB configuration file
+#
+- name: Copy MariaDB configuration file
+  copy:
+    mode: 0644
+    owner: root
+    group: root
+    dest: /etc/mysql/conf.d/mariadb.cnf
+    src: mariadb.cnf
+    force: yes
+
+
+# Set MariaDB to listen on external interfaces
+#
+- name: Comment out bind-address in 50-server.cnf
+  lineinfile:
+    dest: /etc/mysql/mariadb.conf.d/50-server.cnf
+    regexp: '^bind-address'
+    line: "#bind-address = 127.0.0.1"
+    state: present
+
+
+# Create directory in /usr/local for bootstrapping MariaDB data dir 
+#
+- name: Create directory for bootstrapping MariaDB data dir
+  file:
+    path: /usr/local/bootstrap
+    state: directory
+    mode: '0755'
+
+
+# Copy MariaDB data directory to /usr/local/bootstrap/datadir 
+#
+- name: Copy MariaDB data directory to bootstrap directory
+  copy:
+    owner: root
+    group: root
+    dest: /usr/local/bootstrap/datadir
+    src: /var/lib/mysql
+    remote_src: yes
+    force: yes
+
+
+# Remove the MariaDB data directory
+- name: Remove the MariaDB data directory
+  file:
+    path: /var/lib/mysql
+    state: absent
+
+
+# Copy database backup cron file
+#
+- name: Copy database backup cron file
+  copy:
+    mode: 0640
+    owner: root
+    group: root
+    dest: /usr/local/bin/db_backup_cronjob
+    src: db_backup_cronjob
+    force: yes
+
+
+# Copy database backup script
+#
+- name: Copy database backup script
+  copy:
+    mode: 0755
+    owner: root
+    group: root
+    dest: /usr/local/bin/db-backup.sh
+    src: db-backup.sh
+    force: yes
+
+
+# Copy cron deployment script
+#
+- name: Copy cron deployment script
+  copy:
+    mode: 0755
+    owner: root
+    group: root
+    dest: /usr/local/bin/deploy-cron.sh
+    src: deploy-cron.sh
+    force: yes
+
+
+# Copy MariaDB boot script
+#
+- name: Copy MariaDB boot script
+  copy:
+    mode: 0770
+    owner: root
+    group: root
+    dest: /usr/local/bin/mariadb-bootstap.sh
+    src: mariadb-bootstap.sh
+    force: yes
+
+
+# Copy mariadb-service consul service configuration file
+#
+- name: Copy mariadb-service consul service configuration file
+  template:
+    mode: 0640
+    owner: consul
+    group: consul
+    dest: /etc/consul.d/mariadb-service.hcl
+    src: mariadb-service.hcl.j2
+    force: yes
