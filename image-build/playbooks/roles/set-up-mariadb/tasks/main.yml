@@ -163,33 +163,16 @@
     state: present
 
 
-# Create directory in /usr/local for bootstrapping MariaDB data dir 
+# Copy mariadb datadir config file
 #
-- name: Create directory for bootstrapping MariaDB data dir
-  file:
-    path: /usr/local/bootstrap
-    state: directory
-    mode: '0755'
-
-
-# Copy MariaDB data directory to /usr/local/bootstrap/datadir 
-#
-- name: Copy MariaDB data directory to bootstrap directory
+- name: Copy mariadb datadir config file
   copy:
-    owner: mysql
-    group: mysql
-    mode: preserve
-    dest: /usr/local/bootstrap/datadir
-    src: /var/lib/mysql
-    remote_src: yes
+    mode: 0644
+    owner: root
+    group: root
+    dest: /etc/mysql/mariadb.conf.d/99-datadir.cnf
+    src: 99-datadir.cnf
     force: yes
-
-
-# Remove the MariaDB data directory
-- name: Remove the MariaDB data directory
-  file:
-    path: /var/lib/mysql
-    state: absent
 
 
 # Copy database backup cron file

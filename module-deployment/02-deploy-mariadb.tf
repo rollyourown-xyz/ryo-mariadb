@@ -32,7 +32,7 @@ resource "lxd_container" "mariadb" {
     
     properties = {
       source   = "/var/containers/ryo-mariadb/data"
-      path     = "/var/lib/mysql"
+      path     = "/var/mdbdata"
       readonly = "false"
       shift    = "true"
     }

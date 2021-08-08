@@ -1,13 +1,13 @@
 #!/bin/sh
 
 # If the file "BOOTSRTAPPED" is not already present then run bootstrapping tasks
-if [ ! -f "/var/lib/mysql/BOOTSTRAPPED" ]; then
+if [ ! -f "/var/mdbdata/BOOTSTRAPPED" ]; then
   
-  # Copy mariadb data directory contents to mounted directory
-  cp -p -R /usr/local/bootstrap/datadir/mysql/* /var/lib/mysql/
+  # Move mariadb data directory contents to mounted directory
+  mv /var/lib/mysql /var/mdbdata/mysql
   
   # Add file BOOTSTRAPPED to indicate no further bootstrapping needed
-  touch  /var/lib/mysql/BOOTSTRAPPED
+  touch  /var/mdbdata/BOOTSTRAPPED
 
 fi
 
