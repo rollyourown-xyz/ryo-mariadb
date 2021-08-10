@@ -27,7 +27,7 @@ errorMessage()
 # Default software versions
 mariadb_version='10.6.4'
 
-while getopts n:c:v:h flag
+while getopts n:v:m:h flag
 do
     case "${flag}" in
         n) hostname=${OPTARG};;
@@ -38,7 +38,7 @@ do
     esac
 done
 
-if [ -z "$hostname" ] || [ -z "$version" ] || [ -z "$mariadb_version" ] # || [ -z "$consul_template_version" ]
+if [ -z "$hostname" ] || [ -z "$version" ] || [ -z "$mariadb_version" ]
 then
    errorMessage
 fi
