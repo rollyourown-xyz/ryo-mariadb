@@ -226,10 +226,10 @@
 # Copy mariadb-service consul service configuration file
 #
 - name: Copy mariadb-service consul service configuration file
-  template:
+  copy:
     mode: 0640
     owner: consul
     group: consul
     dest: /etc/consul.d/mariadb-service.hcl
-    src: mariadb-service.hcl.j2
+    src: mariadb-service.hcl
     force: yes

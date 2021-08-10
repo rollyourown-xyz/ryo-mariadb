@@ -1,5 +1,5 @@
 service {
-  name = "{{ host_id }}-{{ module_id }}-mariadb"
+  name = "mariadb"
   tags = [ "database" ]
   port = 3306
 }
