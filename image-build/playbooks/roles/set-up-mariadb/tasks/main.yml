@@ -80,7 +80,7 @@
 # Generate a random string as terraform user password (if not previously generated)
 #
 - name: Generate a random string as terraform user password
-  shell: "tr -dc A-Za-z0-9 </dev/urandom | head -c 12"
+  shell: "tr -dc A-Za-z0-9 </dev/urandom | head -c 24"
   register: mariadb_terraform_user_password_stdout
   when: not mariadb_terraform_user_password_file.stat.exists
 
