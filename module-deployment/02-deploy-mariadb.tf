@@ -32,7 +32,7 @@ resource "lxd_container" "mariadb" {
     type = "disk"
     
     properties = {
-      source   = "/var/containers/ryo-mariadb/data"
+      source   = join("", ["/var/containers/", local.module_id, "/data"])
       path     = "/var/mdbdata"
       readonly = "false"
       shift    = "true"
@@ -45,7 +45,7 @@ resource "lxd_container" "mariadb" {
     type = "disk"
     
     properties = {
-      source   = "/var/containers/ryo-mariadb/backup"
+      source   = join("", ["/var/containers/", local.module_id, "/backup"])
       path     = "/var/mdbbackup"
       readonly = "false"
       shift    = "true"
