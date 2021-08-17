@@ -5,7 +5,7 @@
 resource "lxd_container" "mariadb" {
 
   remote     = var.host_id
-  name       = join("-", [ var.host_id, local.module_id, "mariadb" ])
+  name       = "mariadb"
   image      = join("-", [ local.module_id, "mariadb", var.image_version ])
   profiles   = ["default"]
   
