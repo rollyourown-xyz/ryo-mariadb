@@ -22,6 +22,8 @@ resource "mysql_database" "db" {
 
 resource "mysql_user" "user" {
 
+  depends_on = [ mysql_database.db ]
+
   for_each = toset(var.mysql_db_user_hosts)
 
   user               = var.mysql_db_user
