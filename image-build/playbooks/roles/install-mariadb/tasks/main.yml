@@ -8,7 +8,7 @@
 
 # Add repository
 #
-- name: Set up MariaDB repositories
+- name: Set up MariaDB repositories for Maria DB version {{ mariadb_version }}
   apt_repository:
     repo: 'deb [arch=amd64,arm64,ppc64el] http://archive.mariadb.org/mariadb-{{ mariadb_version }}/repo/ubuntu/ focal main'
     state: present
