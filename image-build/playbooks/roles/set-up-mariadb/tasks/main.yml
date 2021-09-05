@@ -72,6 +72,7 @@
 # Load the terraform user password from previously created file (if previously generated)
 #
 - name: Load the terraform user password from previously created file
+  no_log: true
   include_vars:
     file: "{{ playbook_dir }}/../../configuration/mariadb_terraform_user_password_{{ host_id }}.yml"
   when: mariadb_terraform_user_password_file.stat.exists
@@ -80,6 +81,7 @@
 # Generate a random string as terraform user password (if not previously generated)
 #
 - name: Generate a random string as terraform user password
+  no_log: true
   shell: "tr -dc A-Za-z0-9 </dev/urandom | head -c 24"
   register: mariadb_terraform_user_password_stdout
   when: not mariadb_terraform_user_password_file.stat.exists
@@ -88,6 +90,7 @@
 # Assign the terraform user password to the variable mariadb_terraform_user_password (if not previously generated)
 #
 - name: Assign the terraform user password to the variable mariadb_terraform_user_password
+  no_log: true
   set_fact:
     mariadb_terraform_user_password: "{{ mariadb_terraform_user_password_stdout.stdout }}"
   when: not mariadb_terraform_user_password_file.stat.exists
@@ -96,6 +99,7 @@
 # Write the terraform user password to a file in the module configuration directory on the local machine (if not previously generated)
 #
 - name: Write the terraform user password to a file in the module configuration directory
+  no_log: true
   delegate_to: localhost
   template:
     mode: 0640
@@ -111,6 +115,7 @@
 # Add user `terraform` with remote login only from wireguard network and with admin privileges
 #
 - name: Set new terraform user with admin privileges and remote login from wireguard network
+  no_log: true
   mysql_user:
     login_user: root
     login_unix_socket: /var/run/mysqld/mysqld.sock
