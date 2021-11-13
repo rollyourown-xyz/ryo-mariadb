@@ -25,7 +25,8 @@ errorMessage()
 }
 
 # Default software versions
-mariadb_version='10.6.4'
+# NOTE: for nextcloud, mariadb currently needs to be fixed to 10.5
+mariadb_version='10.5.13'
 
 while getopts n:v:m:h flag
 do
