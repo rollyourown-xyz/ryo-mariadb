@@ -11,7 +11,7 @@ helpMessage()
    echo "Flags:"
    echo -e "-n hostname \t\t\t(Mandatory) Name of the host for which to build images"
    echo -e "-v version \t\t\t(Mandatory) Version stamp to apply to images, e.g. 20210101-1"
-   echo -e "-m mariadb_version \t(Optional) Override default mariadb version to use for the mariadb image, e.g. 10.6.4 (default)"
+   echo -e "-m mariadb_version \t(Optional) Override default mariadb version to use for the mariadb image, e.g. 10.5.13 (default)"
    echo -e "-h \t\t\t\tPrint this help message"
    echo ""
    exit 1
