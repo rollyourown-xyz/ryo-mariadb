@@ -3,3 +3,5 @@ package_upgrade: false
 runcmd:
   # Bootstrap mariadb
   - /usr/local/bin/mariadb-bootstrap.sh
+  # Deploy backup cronjob
+  - /usr/local/bin/deploy-cron.sh
