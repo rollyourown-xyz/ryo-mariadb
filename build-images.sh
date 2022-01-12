@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Default software versions
+# NOTE: for nextcloud, mariadb currently needs to be fixed to 10.5
+mariadb_version='10.5.13'
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 helpMessage()
@@ -24,10 +28,6 @@ errorMessage()
    exit 1
 }
 
-# Default software versions
-# NOTE: for nextcloud, mariadb currently needs to be fixed to 10.5
-mariadb_version='10.5.13'
-
 while getopts n:v:m:h flag
 do
     case "${flag}" in
@@ -45,7 +45,10 @@ then
 fi
 
 
-echo "Building images for ryo-mariadb module on "$hostname""
+# Get Module ID from configuration file
+MODULE_ID="$(yq eval '.module_id' "$SCRIPT_DIR"/configuration/configuration.yml)"
+
+echo "Building images for "$MODULE_ID" module on "$hostname""
 echo ""
 echo "Building MariaDB image"
 echo ""
