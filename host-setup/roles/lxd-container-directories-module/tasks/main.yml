@@ -14,14 +14,20 @@
     state: directory
     mode: '0755'
 
+- name: Create a directory to mount in mariadb container
+  file:
+    path: /var/containers/{{ module_id }}/mariadb
+    state: directory
+    mode: '0755'
+
 - name: Create a directory for mariadb data
   file:
-    path: /var/containers/{{ module_id }}/data
+    path: /var/containers/{{ module_id }}/mariadb/data
     state: directory
     mode: '0755'
 
 - name: Create a directory for mariadb backup
   file:
-    path: /var/containers/{{ module_id }}/backup
+    path: /var/containers/{{ module_id }}/mariadb/backup
     state: directory
     mode: '0755'
