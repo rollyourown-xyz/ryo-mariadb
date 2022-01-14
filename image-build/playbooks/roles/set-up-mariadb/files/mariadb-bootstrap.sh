@@ -12,7 +12,7 @@ if [ ! -f "/var/mdbdata/BOOTSTRAPPED" ]; then
 fi
 
 # Enable mariadb service
-service mariadb enable
+systemctl enable mariadb.service
 
 # Start mariadb service
-service mariadb start
+systemctl start mariadb.service
