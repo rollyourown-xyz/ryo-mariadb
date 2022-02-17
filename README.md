@@ -1,6 +1,6 @@
 # Roll Your Own MariaDB Database Server
 
-Deploy a MariaDB database server using Ansible, Packer and Terraform.
+This is a [rollyourown.xyz module](https://rollyourown.xyz/rollyourown/project_modules/) to deploy a MariaDB database server using Ansible, Packer and Terraform.
 
 ## Module Summary
 
