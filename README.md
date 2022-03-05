@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2022 Wilfred Nicoll <xyzroller@rollyourown.xyz>
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Roll Your Own MariaDB Database Server
 
 This is a [rollyourown.xyz module](https://rollyourown.xyz/rollyourown/project_modules/) to deploy a MariaDB database server using Ansible, Packer and Terraform.

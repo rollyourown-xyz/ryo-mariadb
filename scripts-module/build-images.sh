@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SPDX-FileCopyrightText: 2022 Wilfred Nicoll <xyzroller@rollyourown.xyz>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # Default software versions
 # NOTE: for nextcloud, mariadb currently needs to be fixed to 10.5
 mariadb_version='10.5.13'
