@@ -13,6 +13,9 @@ if [ ! -f "/var/mdbdata/BOOTSTRAPPED" ]; then
 
 fi
 
+# Ensure data diretory has correct permissions
+chown -R mysql:mysql /var/mdbdata/mysql
+
 # Enable mariadb service
 systemctl enable mariadb.service
 
