@@ -14,8 +14,11 @@ query_cache_min_res_unit = 2k
 query_cache_size = 64M
 tmp_table_size= 64M
 max_heap_table_size= 64M
+log_error = /var/log/mariadb/mariadb.err
+general_log = 1
+general_log_file = /var/log/mariadb/mariadb.log
 slow_query_log = 1
-slow_query_log_file = /var/log/mysql/slow.log
+slow_query_log_file = /var/log/mariadb/mariadb-slow.log
 long_query_time = 1
 
 [client-server]

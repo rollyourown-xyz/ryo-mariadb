@@ -241,3 +241,25 @@
     dest: /etc/consul.d/mariadb-service.hcl
     src: mariadb-service.hcl
     force: yes
+
+
+# Create mariadb log directory
+- name: Create mariadb log directory
+  file:
+    mode: 0770
+    owner: mysql
+    group: mysql
+    path: /var/log/mariadb
+    state: directory
+
+
+# Copy mariadb log rotation and deletion configuration
+#
+- name: Copy mariadb log rotation and deletion configuration
+  template:
+    mode: 0644
+    owner: root
+    group: root
+    dest: /etc/logrotate.d/mariadb
+    src: logrotate_mariadb.j2
+    force: yes
