@@ -30,6 +30,7 @@
 #     host: "{{ item }}"
 #     state: present
 #   loop:
+#     - {{ wireguard_network_ipv6_prefix }}:%
 #     - {{ wireguard_address_network_part }}.%
 #     - 127.0.0.1
 #     - ::1
@@ -117,7 +118,7 @@
 
 # Add user `terraform` with remote login only from wireguard network and with admin privileges
 #
-- name: Set new terraform user with admin privileges and remote login from wireguard network
+- name: Set new terraform user with admin privileges and remote login from wireguard network (IPv4)
   no_log: true
   mysql_user:
     login_user: root
@@ -126,7 +127,19 @@
     name: terraform
     password: "{{ mariadb_terraform_user_password }}"
     priv: "*.*:ALL,GRANT"
-    host: "{{ wireguard_address_network_part }}.%"
+    host: "{{ wireguard_network_part }}.%"
+    state: present
+
+- name: Set new terraform user with admin privileges and remote login from wireguard network (IPv6)
+  no_log: true
+  mysql_user:
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_password: ""
+    name: terraform
+    password: "{{ mariadb_terraform_user_password }}"
+    priv: "*.*:ALL,GRANT"
+    host: "{{ wireguard_network_ipv6_prefix }}:%"
     state: present
 
 

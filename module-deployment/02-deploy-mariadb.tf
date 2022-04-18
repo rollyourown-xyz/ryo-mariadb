@@ -26,6 +26,7 @@ resource "lxd_container" "mariadb" {
       name           = "eth0"
       network        = var.host_id
       "ipv4.address" = join(".", [ local.lxd_host_network_part, local.mariadb_ip_addr_host_part ])
+      "ipv6.address" = join("", [ local.lxd_host_ipv6_prefix, "::", local.lxd_host_network_ipv6_subnet, ":", local.mariadb_ip_addr_host_part ])
     }
   }
   
