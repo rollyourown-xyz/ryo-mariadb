@@ -5,7 +5,7 @@
 
 # Default software versions
 # NOTE: for nextcloud, mariadb currently needs to be fixed to 10.5
-mariadb_version='10.5.13'
+mariadb_version='10.5.15'
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
